@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import { FilterType } from "./interfaces";
+import { FilterType, PriceFilters } from "./interfaces";
 
 const initialState = {
   filterTypes: [
@@ -12,6 +12,18 @@ const initialState = {
     { value: "department", label: "Department" },
   ],
   selectedFilterType: { value: "name", label: "Name" },
+  priceFilterTypes: [
+    { label: "None", value: PriceFilters.none },
+    { label: "Price Ascending", value: PriceFilters.asc },
+    { label: "Price Descending", value: PriceFilters.desc },
+  ],
+  selectedPriceFilter: "none",
+  hasDiscountTypes: [
+    { label: "Has Discount", value: "true" },
+    { label: "No Discount", value: "false" },
+    { label: "None", value: "none" },
+  ],
+  selectedDiscountFilter: "none",
   name: "",
   currentFilterValue: "",
 } as {
@@ -19,6 +31,10 @@ const initialState = {
   filterTypes: FilterType[];
   selectedFilterType: FilterType;
   currentFilterValue: string;
+  selectedPriceFilter: string;
+  priceFilterTypes: FilterType[];
+  selectedDiscountFilter: string;
+  hasDiscountTypes: FilterType[];
 };
 
 const slice = createSlice({
@@ -37,8 +53,20 @@ const slice = createSlice({
         (filterType) => filterType.value === action.payload
       ) as FilterType;
     },
+    setPriceFilter: (state, action) => {
+      state.selectedPriceFilter = action.payload;
+    },
+    setDiscountFilter: (state, action) => {
+      state.selectedDiscountFilter = action.payload;
+    },
   },
 });
 
-export const { searchByName, setFilterType, setFilterValue } = slice.actions;
+export const {
+  searchByName,
+  setFilterType,
+  setFilterValue,
+  setPriceFilter,
+  setDiscountFilter,
+} = slice.actions;
 export default slice.reducer;

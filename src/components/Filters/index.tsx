@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Radio, RadioChangeEvent } from "antd";
+import { Checkbox, Input, Radio, RadioChangeEvent } from "antd";
 import { FilterType } from "../../app/features/filter/interfaces";
 
 const { Search } = Input;
@@ -20,23 +20,23 @@ export default function FilterField({
   onChange,
   radioCurrentValue,
 }: Props) {
-  if (type.value !== "suplier") {
+  if (type.value === "suplier") {
     return (
-      <Search
-        placeholder={`Search for product ${type.label}`}
-        allowClear
-        onChange={onSearch}
+      <Radio.Group
+        options={options}
+        onChange={onChange}
+        value={radioCurrentValue}
+        optionType="button"
+        buttonStyle="solid"
+        defaultValue={options[0].value}
       />
     );
   }
   return (
-    <Radio.Group
-      options={options}
-      onChange={onChange}
-      value={radioCurrentValue}
-      optionType="button"
-      buttonStyle="solid"
-      defaultValue={options[0].value}
+    <Search
+      placeholder={`Search for product ${type.label}`}
+      allowClear
+      onChange={onSearch}
     />
   );
 }

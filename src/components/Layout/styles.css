@@ -21,6 +21,8 @@
 }
 .filters {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
   width: 60%;
   gap: 1rem;

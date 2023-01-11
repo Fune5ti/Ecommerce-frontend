@@ -6,3 +6,11 @@ export const getSelectedFilter = (state: RootState) =>
 export const getFilterTypes = (state: RootState) => state.filter.filterTypes;
 export const getFilterValue = (state: RootState) =>
   state.filter.currentFilterValue;
+export const getPriceFilter = (state: RootState) =>
+  state.filter.selectedPriceFilter;
+export const getPriceFilterTypes = (state: RootState) =>
+  state.filter.priceFilterTypes;
+export const getDiscountFilter = (state: RootState) =>
+  state.filter.selectedDiscountFilter;
+export const getDiscountFilterTypes = (state: RootState) =>
+  state.filter.hasDiscountTypes;

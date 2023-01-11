@@ -9,7 +9,9 @@ import { addToCart } from "../../app/features/cart/cartSlice";
 import { computePriceWithDiscount } from "../../utils/computePrice";
 import { getCartItems } from "../../app/features/cart/selectors";
 import {
+  getDiscountFilter,
   getFilterValue,
+  getPriceFilter,
   getSelectedFilter,
 } from "../../app/features/filter/selectors";
 import { Product } from "../../app/api/interfaces";
@@ -20,6 +22,8 @@ export default function Home() {
   const cartItems = useAppSelector(getCartItems);
   const filterValue = useAppSelector(getFilterValue);
   const filterType = useAppSelector(getSelectedFilter);
+  const priceFilter = useAppSelector(getPriceFilter);
+  const discountFilter = useAppSelector(getDiscountFilter);
 
   const [page, setPage] = useState(1);
 
@@ -28,7 +32,14 @@ export default function Home() {
   const isInCartMemoized = useMemo(() => isInCart, [cartItems]);
 
   const { data: response, isLoading } = useGetallproductsQuery(
-    { page: page, params: { [filterType.value]: filterValue } },
+    {
+      page: page,
+      params: {
+        [filterType.value]: filterValue,
+        [priceFilter]: true,
+        hasdiscount: discountFilter,
+      },
+    },
     {
       pollingInterval: 3000,
       refetchOnMountOrArgChange: true,

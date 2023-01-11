@@ -1,12 +1,22 @@
-import { Layout, Input, Button, Badge, Select, RadioChangeEvent } from "antd";
+import {
+  Layout,
+  Input,
+  Button,
+  Badge,
+  Select,
+  RadioChangeEvent,
+  Popover,
+} from "antd";
 import "./styles.css";
 import { Link, Outlet } from "react-router-dom";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { debounce } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  setDiscountFilter,
   setFilterType,
   setFilterValue,
+  setPriceFilter,
 } from "../../app/features/filter/filterSlice";
 import ShoppingCart from "../ShoppingCart";
 import {
@@ -19,7 +29,7 @@ import {
   closeClientInfoDrawer,
   setClient,
 } from "../../app/features/cart/cartSlice";
-import { UilShoppingBag } from "@iconscout/react-unicons";
+import { UilFilter, UilShoppingBag } from "@iconscout/react-unicons";
 import { useCreatePurchaseMutation } from "../../app/api/Purchase";
 import { toast } from "react-toastify";
 import FilterField from "../Filters";
@@ -32,10 +42,15 @@ import {
   getTotal,
 } from "../../app/features/cart/selectors";
 import {
+  getDiscountFilter,
+  getDiscountFilterTypes,
   getFilterTypes,
   getFilterValue,
+  getPriceFilter,
+  getPriceFilterTypes,
   getSelectedFilter,
 } from "../../app/features/filter/selectors";
+import { PriceFilters } from "../../app/features/filter/interfaces";
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -62,6 +77,10 @@ export default function RootLayout() {
   const filterTypes = useAppSelector(getFilterTypes);
   const selectedFilterType = useAppSelector(getSelectedFilter);
   const selectedFilterValue = useAppSelector(getFilterValue);
+  const selectedPriceFilter = useAppSelector(getPriceFilter);
+  const priceFilterTypes = useAppSelector(getPriceFilterTypes);
+  const selectedDiscountFilter = useAppSelector(getDiscountFilter);
+  const discountFilterTypes = useAppSelector(getDiscountFilterTypes);
 
   const onCompletePurchase = () => {
     createPurchase({
@@ -86,11 +105,18 @@ export default function RootLayout() {
     dispatch(setFilterType(value));
   };
 
+  const onChangePriceFilter = (value: string) => {
+    dispatch(setPriceFilter(value));
+  };
+  const onChangeDiscountFilter = (value: string) => {
+    dispatch(setDiscountFilter(value));
+  };
+
   const onRadioChange = ({ target: { value } }: RadioChangeEvent) => {
     dispatch(setFilterType("suplier"));
     dispatch(setFilterValue(value));
   };
-
+  const [openFilters, setOpenFilters] = useState(false);
   return (
     <Layout className="layout">
       <Header className="navbar">
@@ -104,22 +130,51 @@ export default function RootLayout() {
           }}
         >
           <Link to="/">Ecommerce Home</Link>
-          <span className="filters">
-            <Select
-              style={{ minWidth: "150px" }}
-              placeholder="Select a field to filter"
-              optionFilterProp="children"
-              onChange={onChange}
-              defaultValue={selectedFilterType.value}
-              options={filterTypes}
-            />
-            <FilterField
-              type={selectedFilterType}
-              onSearch={debouncedSearch}
-              onChange={onRadioChange}
-              radioCurrentValue={selectedFilterValue}
-            />
-          </span>
+          <Popover
+            content={
+              <span className="filters">
+                <Select
+                  style={{ minWidth: "150px" }}
+                  placeholder="Select a field to filter"
+                  optionFilterProp="children"
+                  onChange={onChange}
+                  defaultValue={selectedFilterType.value}
+                  options={filterTypes}
+                />
+                <FilterField
+                  type={selectedFilterType}
+                  onSearch={debouncedSearch}
+                  onChange={onRadioChange}
+                  radioCurrentValue={selectedFilterValue}
+                />
+                <Select
+                  style={{ minWidth: "150px" }}
+                  placeholder="Select a price filter"
+                  optionFilterProp="children"
+                  onChange={onChangePriceFilter}
+                  defaultValue={selectedPriceFilter}
+                  options={priceFilterTypes}
+                />
+                <Select
+                  style={{ minWidth: "150px" }}
+                  placeholder="Select a discount filter"
+                  optionFilterProp="children"
+                  onChange={onChangeDiscountFilter}
+                  defaultValue={selectedDiscountFilter}
+                  options={discountFilterTypes}
+                />
+              </span>
+            }
+            title="Filters"
+            trigger="click"
+            open={openFilters}
+            onOpenChange={() => {
+              setOpenFilters(!openFilters);
+            }}
+          >
+            <Button type="primary" icon={<UilFilter />} size="large" />
+          </Popover>
+
           <Badge count={cartItems.length}>
             <Button
               type="primary"

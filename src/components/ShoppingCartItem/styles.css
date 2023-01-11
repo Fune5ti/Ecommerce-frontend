@@ -1,0 +1,17 @@
+.item-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+.right-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+}
+.label-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

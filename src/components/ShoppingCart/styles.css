@@ -1,0 +1,15 @@
+.finalize-button {
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  background-color: #fff;
+  width: 100%;
+  padding: 10px;
+}
+.total-row {
+  margin-right: 50px;
+}
